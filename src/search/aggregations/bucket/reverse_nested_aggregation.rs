@@ -24,7 +24,7 @@ impl ReverseNestedAggregation {
 }
 
 impl Aggregation {
-    pub fn reversed_nested<T>(path: Option<T>) -> ReverseNestedAggregation
+    pub fn reverse_nested<T>(path: Option<T>) -> ReverseNestedAggregation
     where
         T: ToString,
     {
@@ -44,7 +44,7 @@ mod tests {
     #[test]
     fn serialization() {
         assert_serialize_aggregation(
-            Aggregation::reversed_nested::<String>(None),
+            Aggregation::reverse_nested::<String>(None),
             json!({ "reverse_nested": { } }),
         );
     }
