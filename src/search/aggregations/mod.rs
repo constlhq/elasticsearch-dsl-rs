@@ -73,6 +73,7 @@ aggregation!(
     DateHistogram(DateHistogramAggregation),
     GeotileGrid(GeotileGridAggregation),
     Nested(NestedAggregation),
+    ReverseNested(ReverseNestedAggregation),
 );
 
 /// Type alias for a collection of aggregations

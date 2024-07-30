@@ -1,55 +1,51 @@
 use crate::search::*;
 use crate::util::*;
-use serde::Serialize;
+use crate::{Aggregation, Aggregations};
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
 /// A multi-bucket value source based aggregation where buckets are dynamically built - one per unique value.
 ///
 /// <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html>
-pub struct NestedAggregation {
-    nested: NestedAggregationInner,
+pub struct ReverseNestedAggregation {
+    reverse_nested: ReverseNestedAggregationInner,
 
     #[serde(skip_serializing_if = "ShouldSkip::should_skip")]
     aggs: Aggregations,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
-struct NestedAggregationInner {
-    path: String,
+struct ReverseNestedAggregationInner {
+    #[serde(skip_serializing_if = "ShouldSkip::should_skip")]
+    path: Option<String>,
 }
 
-impl NestedAggregation {
+impl ReverseNestedAggregation {
     add_aggregate!();
 }
 
-// impl  NestedAggregationInner{
-//     pub fn new()
-// }
-
 impl Aggregation {
-    /// foo
-    pub fn nested<T>(path: T) -> NestedAggregation
+    pub fn reversed_nested<T>(path: Option<T>) -> ReverseNestedAggregation
     where
         T: ToString,
     {
-        NestedAggregation {
-            nested: NestedAggregationInner {
-                path: path.to_string(),
-            },
+        ReverseNestedAggregation {
+            reverse_nested: ReverseNestedAggregationInner { path: path.map_or(None, |t| Some(t.to_string())) },
             aggs: Aggregations::new(),
         }
     }
 }
 
+
 #[cfg(test)]
 mod tests {
+    use crate::util::assert_serialize_aggregation;
     use super::*;
 
     #[test]
     fn serialization() {
         assert_serialize_aggregation(
-            Aggregation::nested("test_field"),
-            json!({ "nested": { "path": "test_field" } }),
+            Aggregation::reversed_nested::<String>(None),
+            json!({ "reverse_nested": { } }),
         );
     }
 }
