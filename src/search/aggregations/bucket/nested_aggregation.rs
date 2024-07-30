@@ -18,3 +18,38 @@ struct NestedAggregationInner {
     path: String,
 }
 
+impl NestedAggregation {
+    add_aggregate!();
+}
+
+// impl  NestedAggregationInner{
+//     pub fn new()
+// }
+
+impl Aggregation {
+    /// foo
+    pub fn nested<T>(path: T) -> NestedAggregation
+    where
+        T: ToString,
+    {
+        NestedAggregation {
+            nested: NestedAggregationInner {
+                path: path.to_string(),
+            },
+            aggs: Default::default(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn serialization() {
+        assert_serialize_aggregation(
+            Aggregation::nested("test_field"),
+            json!({ "nested": { "path": "test_field" } }),
+        );
+    }
+}

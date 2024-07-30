@@ -72,6 +72,7 @@ aggregation!(
     Boxplot(BoxplotAggregation),
     DateHistogram(DateHistogramAggregation),
     GeotileGrid(GeotileGridAggregation),
+    Nested(NestedAggregation),
 );
 
 /// Type alias for a collection of aggregations
