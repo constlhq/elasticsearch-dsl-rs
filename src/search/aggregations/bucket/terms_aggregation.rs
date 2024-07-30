@@ -21,6 +21,9 @@ struct TermsAggregationInner {
     size: Option<u64>,
 
     #[serde(skip_serializing_if = "ShouldSkip::should_skip")]
+    shard_size: Option<u64>,
+
+    #[serde(skip_serializing_if = "ShouldSkip::should_skip")]
     show_term_doc_count_error: Option<bool>,
 
     #[serde(skip_serializing_if = "ShouldSkip::should_skip")]
@@ -51,6 +54,7 @@ impl Aggregation {
             terms: TermsAggregationInner {
                 field: field.to_string(),
                 size: None,
+                shard_size: None,
                 show_term_doc_count_error: None,
                 order: Default::default(),
                 min_doc_count: None,
@@ -73,6 +77,11 @@ impl TermsAggregation {
     /// (it could be that the term counts are slightly off and it could even be that a term that should have been in the top `size` buckets was not returned).
     pub fn size(mut self, size: u64) -> Self {
         self.terms.size = Some(size);
+        self
+    }
+
+    pub fn shard_size(mut self, size: u64) -> Self {
+        self.terms.shard_size = Some(size);
         self
     }
 
